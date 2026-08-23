@@ -1,57 +1,86 @@
-# restaurant-seo
-Yes. If by “restaurant-seo code” you mean you want the actual Phase 1 source code, the target is:
+# Restaurant SEO
 
-valleedukashmir786/restaurant-seo
-└── main
+A comprehensive SEO audit platform for restaurant websites.
 
-I recommend we build it as:
+## Phase 1 (v0.1.0)
 
-restaurant-seo/
-├── app/
-│   ├── api/v1/
-│   ├── analyzers/
-│   ├── core/
-│   ├── db/
-│   ├── models/
-│   ├── schemas/
-│   ├── services/
-│   └── main.py
-├── alembic/
-│   └── versions/
-├── tests/
-├── scripts/
-│   └── verify_phase1.sh
-├── .github/workflows/
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-├── dev-requirements.txt
-├── pyproject.toml
-├── .env.example
-├── .gitignore
-├── LICENSE
-└── README.md
+- Async FastAPI application
+- PostgreSQL database with SQLAlchemy ORM
+- Alembic migrations
+- Restaurant, location, project, audit, and finding models
+- Deterministic audit engine with stub analyzers
+- REST API endpoints
+- Docker + docker-compose setup
+- Automated CI/CD with GHCR publishing
 
-The core flow will be:
+## Development
 
-Restaurant
-    ↓
-POST /api/v1/audits
-    ↓
-AuditService
-    ↓
-Analyzer Registry
-    ├── ProfileAnalyzer
-    └── CategoryAnalyzer
-    ↓
-AuditFinding
-    ↓
-PostgreSQL
+### Prerequisites
 
-And Phase 1 will not connect to Google. The analyzers will use deterministic fixture data so we can properly test the engine before Phase 2.
+- Python 3.12
+- Docker and docker-compose
+- PostgreSQL 16 (or use docker-compose)
 
-If the repository is already created on GitHub, send me:
+### Setup
 
-Done — restaurant-seo exists on main.
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r dev-requirements.txt
+```
 
-Then we can move directly to the repository implementation rather than continuing to redesign it.
+### Environment
+
+Copy `.env.example` to `.env`:
+
+```bash
+cp .env.example .env
+```
+
+### Database
+
+Start PostgreSQL:
+
+```bash
+docker-compose up -d postgres
+```
+
+Run migrations:
+
+```bash
+alembic upgrade head
+```
+
+### Running the API
+
+```bash
+uvicorn app.main:app --reload
+```
+
+API will be available at `http://localhost:8000`.
+
+Health check: `GET /health`
+
+### Testing
+
+```bash
+pytest
+```
+
+### Linting
+
+```bash
+ruff check .
+```
+
+### Docker
+
+Build and run the full stack:
+
+```bash
+docker-compose up
+```
+
+## License
+
+MIT
